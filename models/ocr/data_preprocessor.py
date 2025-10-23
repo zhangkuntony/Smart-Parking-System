@@ -159,18 +159,18 @@ class DataPreprocessor:
         ])
         
         # 训练集
-        train_labels = os.path.join(self.data_root, "datasets/train/train_labels.txt")
-        train_image_dir = os.path.join(self.data_root, "datasets/train/images")
+        train_labels = os.path.join(self.data_root, "train/train_labels.txt")
+        train_image_dir = os.path.join(self.data_root, "train/images")
         train_dataset = LicensePlateOCRDataset(train_labels, train_image_dir, transform)
         
         # 验证集
-        val_labels = os.path.join(self.data_root, "datasets/val/val_labels.txt")
-        val_image_dir = os.path.join(self.data_root, "datasets/val/images")
+        val_labels = os.path.join(self.data_root, "val/val_labels.txt")
+        val_image_dir = os.path.join(self.data_root, "val/images")
         val_dataset = LicensePlateOCRDataset(val_labels, val_image_dir)
         
         # 测试集
-        test_labels = os.path.join(self.data_root, "datasets/test/test_labels.txt")
-        test_image_dir = os.path.join(self.data_root, "datasets/test/images")
+        test_labels = os.path.join(self.data_root, "test/test_labels.txt")
+        test_image_dir = os.path.join(self.data_root, "test/images")
         test_dataset = LicensePlateOCRDataset(test_labels, test_image_dir)
         
         print(f"训练集大小: {len(train_dataset)}")

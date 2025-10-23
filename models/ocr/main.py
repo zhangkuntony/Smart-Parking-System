@@ -97,8 +97,8 @@ def test_accuracy():
     ocr = LicensePlateOCR()
     
     try:
-        test_labels = "../../data/ocr_data/datasets/test/test_labels.txt"
-        test_image_dir = "../../data/ocr_data/datasets/test/images"
+        test_labels = "../../data/ocr_data/test/test_labels.txt"
+        test_image_dir = "../../data/ocr_data/test/images"
         
         accuracy = ocr.test_accuracy(test_labels, test_image_dir)
         

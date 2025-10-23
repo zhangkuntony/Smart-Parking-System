@@ -4,13 +4,17 @@ import torch
 import numpy as np
 from PIL import Image
 import argparse
+import sys
+
+# 添加当前目录到Python路径
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from crnn_model import LicensePlateRecognizer
 
 class LicensePlateOCR:
     """车牌OCR推理类"""
     
-    def __init__(self, model_path="../../plate_ocr_model.pt", device=None):
+    def __init__(self, model_path="../plate_ocr_model.pt", device=None):
         """
         初始化OCR推理器
         
@@ -241,7 +245,7 @@ def main():
     parser.add_argument('--image_dir', type=str, help='图像目录路径')
     parser.add_argument('--output_dir', type=str, default='../../results/ocr_results',
                        help='输出目录路径')
-    parser.add_argument('--model', type=str, default='../../plate_ocr_model.pt',
+    parser.add_argument('--model', type=str, default='../plate_ocr_model.pt',
                        help='模型文件路径')
     
     args = parser.parse_args()
@@ -269,8 +273,8 @@ def main():
         print(f"批量识别完成，共处理 {len(results)} 张图像")
     
     elif args.mode == 'test':
-        test_labels = "../../data/ocr_data/datasets/test/test_labels.txt"
-        test_image_dir = "../../data/ocr_data/datasets/test/images"
+        test_labels = "../../data/ocr_data/test/test_labels.txt"
+        test_image_dir = "../../data/ocr_data/test/images"
         
         accuracy = ocr.test_accuracy(test_labels, test_image_dir)
 

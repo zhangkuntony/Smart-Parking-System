@@ -163,7 +163,7 @@ class LicensePlateDetector:
 def main():
     """主推理函数"""
     # 配置路径
-    model_path = "../../plate_detection_model.pt"
+    model_path = "../plate_detection_model.pt"
     test_image_path = "../../data/images/"  # 测试图像目录
     output_dir = "../../results"
     

@@ -13,7 +13,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from inference import LicensePlateOCR
 
-def predict_single_image(image_path, model_path="../../plate_ocr_model.pt"):
+def predict_single_image(image_path, model_path="../plate_ocr_model.pt"):
     """预测单张图像"""
     print(f"=== 预测单张图像: {image_path} ===")
     
@@ -45,7 +45,7 @@ def predict_single_image(image_path, model_path="../../plate_ocr_model.pt"):
         print(f"预测失败: {e}")
         return None
 
-def predict_batch_images(image_dir, output_dir="../../results/ocr_results", model_path="../../plate_ocr_model.pt"):
+def predict_batch_images(image_dir, output_dir="../../results/ocr_results", model_path="../plate_ocr_model.pt"):
     """批量预测图像"""
     print(f"=== 批量预测图像: {image_dir} ===")
     
@@ -101,7 +101,7 @@ def main():
     parser.add_argument('--image_dir', type=str, help='图像目录路径')
     parser.add_argument('--output_dir', type=str, default='../../results/ocr_results',
                        help='输出目录路径')
-    parser.add_argument('--model', type=str, default='../../plate_ocr_model.pt',
+    parser.add_argument('--model', type=str, default='../plate_ocr_model.pt',
                        help='模型文件路径')
     
     args = parser.parse_args()

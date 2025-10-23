@@ -123,7 +123,7 @@ def main():
     """主训练函数"""
     # 配置路径
     data_yaml_path = "../../datasets/plates/data.yaml"
-    output_model_path = "../../plate_detection_model.pt"
+    output_model_path = "../plate_detection_model.pt"
     
     # 检查数据文件是否存在
     if not os.path.exists(data_yaml_path):

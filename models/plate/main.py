@@ -40,7 +40,7 @@ def train_model():
     print("\n=== 模型训练阶段 ===")
     
     data_yaml_path = "../../datasets/plates/data.yaml"
-    output_model_path = "../../plate_detection_model.pt"
+    output_model_path = "../plate_detection_model.pt"
     
     # 检查数据文件是否存在
     if not os.path.exists(data_yaml_path):
@@ -66,7 +66,7 @@ def run_inference():
     """运行推理"""
     print("\n=== 推理测试阶段 ===")
     
-    model_path = "../../plate_detection_model.pt"
+    model_path = "../plate_detection_model.pt"
     test_image_path = "../../data/images/"
     output_dir = "../../results"
     
@@ -112,7 +112,7 @@ def main():
     if args.mode == 'all' or args.mode == 'inference':
         if args.image:
             # 单张图像推理
-            detector = LicensePlateDetector("../../plate_detection_model.pt")
+            detector = LicensePlateDetector("../plate_detection_model.pt")
             result = detector.process_single_image(args.image, "../../results")
             print(f"检测结果: {result}")
         else:

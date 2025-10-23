@@ -13,7 +13,7 @@ from crnn_model import LicensePlateRecognizer
 class OCRTrainer:
     """OCR训练器"""
     
-    def __init__(self, data_root="../../data/ocr_data", model_save_path="../../plate_ocr_model.pt"):
+    def __init__(self, data_root="../../data/ocr_data", model_save_path="../plate_ocr_model.pt"):
         """
         初始化训练器
         

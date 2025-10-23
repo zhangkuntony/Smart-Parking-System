@@ -36,8 +36,8 @@ echo "=== 模型训练 ==="
 $PYTHON_PATH train_model.py
 
 # 检查模型是否生成
-if [ -f "../../plate_detection_model.pt" ]; then
-    echo "模型训练成功! 模型文件: ../../plate_detection_model.pt"
+if [ -f "../plate_detection_model.pt" ]; then
+    echo "模型训练成功! 模型文件: ../plate_detection_model.pt"
 else
     echo "警告: 模型文件未生成，请检查训练过程"
 fi
@@ -47,12 +47,12 @@ echo "=== 推理测试 ==="
 $PYTHON_PATH inference.py
 
 echo "=== 训练完成 ==="
-echo "模型文件: ../../plate_detection_model.pt"
+echo "模型文件: ../plate_detection_model.pt"
 echo "训练日志: ../../runs/detect/train/"
 echo "测试结果: ../../results/"
 
 # 显示模型大小
-if [ -f "../../plate_detection_model.pt" ]; then
-    MODEL_SIZE=$(du -h "../../plate_detection_model.pt" | cut -f1)
+if [ -f "../plate_detection_model.pt" ]; then
+    MODEL_SIZE=$(du -h "../plate_detection_model.pt" | cut -f1)
     echo "模型大小: $MODEL_SIZE"
 fi
