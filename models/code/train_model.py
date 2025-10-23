@@ -51,7 +51,7 @@ class YOLOv8Trainer:
         else:
             device = 'cpu'
             batch_size = 8  # CPU上减小批量大小
-            epochs = 50  # CPU上训练较少轮次
+            epochs = 3  # CPU上训练较少轮次
             print("使用CPU进行训练，建议使用GPU以获得更好性能")
         
         training_config = {

@@ -27,9 +27,9 @@ class CCPDDataPreprocessor:
                 img_path = sample['media']['media_path']
                 img_name = os.path.basename(img_path)
                 
-                # 获取图像尺寸（注意：您的数据中media_shape是[width, height]）
-                img_w = sample['media']['media_shape'][0]  # 宽度
-                img_h = sample['media']['media_shape'][1]  # 高度
+                # 获取图像尺寸（注意：您的数据中media_shape是[height, width]）
+                img_h = sample['media']['media_shape'][0]  # 高度
+                img_w = sample['media']['media_shape'][1]  # 宽度
                 
                 # 处理每个标注（可能有多个车牌）
                 for annotation in sample['annotations']:
