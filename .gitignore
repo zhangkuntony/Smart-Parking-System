@@ -6,3 +6,5 @@ results/
 runs/
 
 *.pt
+
+node_modules/

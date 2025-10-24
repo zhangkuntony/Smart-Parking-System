@@ -1,0 +1,33 @@
+# Smart Parking System - 后端API服务依赖包
+
+## Web框架
+fastapi==0.115.2
+uvicorn==0.23.2
+python-multipart==0.0.18
+python-dotenv==1.0.0
+starlette==0.40.0
+
+## 数据库
+mysql-connector-python==8.1.0
+
+## 核心深度学习框架（与模型保持一致）
+torch>=1.10.0
+torchvision>=0.11.0
+
+## 车牌检测相关
+ultralytics>=8.0.0
+
+## 图像处理
+opencv-python>=4.5.0
+Pillow>=8.0.0
+
+## 数据处理和科学计算
+numpy>=1.21.0
+scikit-learn>=1.0.0
+
+## 工具库
+tqdm>=4.60.0
+matplotlib>=3.3.0
+
+## 配置文件
+PyYAML>=5.4.0
