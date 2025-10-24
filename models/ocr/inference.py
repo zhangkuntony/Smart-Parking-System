@@ -2,7 +2,6 @@ import os
 import cv2
 import torch
 import numpy as np
-from PIL import Image
 import argparse
 import sys
 

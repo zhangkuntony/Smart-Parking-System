@@ -1,11 +1,15 @@
 import os
 import torch
-import torch.nn as nn
 from torch.optim import Adam
 from torch.optim.lr_scheduler import StepLR
 import torch.nn.functional as F
 from tqdm import tqdm
 import matplotlib.pyplot as plt
+import matplotlib
+
+# 设置中文字体支持
+plt.rcParams['font.sans-serif'] = ['SimHei', 'Microsoft YaHei', 'DejaVu Sans']  # 设置字体
+plt.rcParams['axes.unicode_minus'] = False  # 解决负号显示问题
 
 from data_preprocessor import DataPreprocessor
 from crnn_model import LicensePlateRecognizer
@@ -331,7 +335,8 @@ class OCRTrainer:
         plt.title('训练和验证准确率')
         
         plt.tight_layout()
-        plt.savefig('../../training_curve.png', dpi=300, bbox_inches='tight')
+        os.makedirs("../../runs/ocr/", exist_ok=True)
+        plt.savefig('../../runs/ocr/training_curve.png', dpi=300, bbox_inches='tight')
         plt.show()
 
 if __name__ == "__main__":

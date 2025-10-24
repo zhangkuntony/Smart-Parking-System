@@ -9,8 +9,6 @@
 
 import os
 import cv2
-import torch
-import numpy as np
 from pathlib import Path
 import json
 from datetime import datetime
@@ -320,9 +318,9 @@ def main():
     parser.add_argument('--image_dir', type=str, help='图像目录路径')
     parser.add_argument('--output_dir', type=str, default='../results/recognition_results',
                        help='输出目录路径')
-    parser.add_argument('--detection_model', type=str, default='../plate_detection_model.pt',
+    parser.add_argument('--detection_model', type=str, default='./plate_detection_model.pt',
                        help='车牌检测模型路径')
-    parser.add_argument('--ocr_model', type=str, default='../plate_ocr_model.pt',
+    parser.add_argument('--ocr_model', type=str, default='./plate_ocr_model.pt',
                        help='OCR识别模型路径')
     parser.add_argument('--conf_threshold', type=float, default=0.5,
                        help='检测置信度阈值')

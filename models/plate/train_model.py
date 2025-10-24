@@ -3,7 +3,6 @@ YOLOv8模型训练模块
 """
 
 import os
-import yaml
 from ultralytics import YOLO
 import torch
 
