@@ -1,140 +1,121 @@
 <template>
   <div id="app">
-    <el-container>
-      <el-header>
-        <h1>车牌检测系统</h1>
+    <el-container style="height: 100vh;">
+      <el-header style="height: auto; padding: 0;">
+        <div class="header-content">
+          <h1>智慧停车管理系统</h1>
+          <el-menu
+            :default-active="activeTab"
+            mode="horizontal"
+            @select="handleTabSelect"
+            background-color="#409EFF"
+            text-color="#fff"
+            active-text-color="#ffd04b"
+            style="min-height: 60px;"
+          >
+            <el-menu-item index="detection">车牌检测</el-menu-item>
+            <el-menu-item index="management">车牌管理</el-menu-item>
+          </el-menu>
+        </div>
       </el-header>
-      <el-main>
-        <el-card class="upload-card">
-          <template #header>
-            <div class="card-header">
-              <span>上传车牌图片</span>
-            </div>
-          </template>
-          <el-upload
-            class="upload-demo"
-            action=""
-            :auto-upload="false"
-            :on-change="handleFileUpload"
-            :show-file-list="false"
-          >
-            <el-button type="primary">选择图片</el-button>
-            <div v-if="imagePreview" class="preview-container">
-              <img :src="imagePreview" alt="预览图" class="preview-image" />
-            </div>
-          </el-upload>
-          <el-button 
-            type="success" 
-            @click="uploadImage" 
-            :disabled="!imageFile"
-            style="margin-top: 20px;"
-          >
-            检测车牌
-          </el-button>
-        </el-card>
-
-        <el-card class="result-card" v-if="detectionResult">
-          <template #header>
-            <div class="card-header">
-              <span>检测结果</span>
-            </div>
-          </template>
-          <el-descriptions border>
-            <el-descriptions-item label="车牌号码">{{ detectionResult.plate_number }}</el-descriptions-item>
-            <el-descriptions-item label="有效期至">{{ detectionResult.valid_to }}</el-descriptions-item>
-            <el-descriptions-item label="是否有效">
-              <el-tag :type="detectionResult.is_valid ? 'success' : 'danger'">
-                {{ detectionResult.is_valid ? '有效' : '无效' }}
-              </el-tag>
-            </el-descriptions-item>
-          </el-descriptions>
-        </el-card>
+      <el-main style="padding: 20px; overflow: auto;">
+        <plate-detection v-if="activeTab === 'detection'" />
+        <plate-management v-if="activeTab === 'management'" />
       </el-main>
     </el-container>
   </div>
 </template>
 
 <script>
+import PlateDetection from './PlateDetection.vue'
+import PlateManagement from './PlateManagement.vue'
+
 export default {
   name: 'App',
+  components: {
+    PlateDetection,
+    PlateManagement
+  },
   data() {
     return {
-      imageFile: null,
-      imagePreview: null,
-      detectionResult: null
+      activeTab: 'detection'
     }
   },
   methods: {
-    handleFileUpload(file) {
-      if (file) {
-        this.imageFile = file.raw
-        // 生成预览图
-        const reader = new FileReader()
-        reader.onload = (e) => {
-          this.imagePreview = e.target.result
-        }
-        reader.readAsDataURL(file.raw)
-      }
-    },
-    async uploadImage() {
-      if (!this.imageFile) {
-        alert('请先选择图片')
-        return
-      }
-
-      const formData = new FormData()
-      formData.append('image', this.imageFile)
-
-      try {
-        const response = await fetch('http://localhost:8000/detect/', {
-          method: 'POST',
-          body: formData
-        })
-        
-        if (!response.ok) {
-          throw new Error('检测失败')
-        }
-        
-        this.detectionResult = await response.json()
-      } catch (error) {
-        console.error('Error:', error)
-        alert('车牌检测失败，请重试')
-      }
+    handleTabSelect(index) {
+      this.activeTab = index
     }
   }
 }
 </script>
 
 <style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
-  text-align: center;
   color: #2c3e50;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-.el-header {
+.header-content {
   background-color: #409EFF;
   color: white;
-  line-height: 60px;
 }
 
-.upload-card, .result-card {
-  max-width: 800px;
-  margin: 20px auto;
-}
-
-.card-header {
-  font-size: 18px;
+.header-content h1 {
+  margin: 0;
+  padding: 15px 0;
+  text-align: center;
+  font-size: 24px;
   font-weight: bold;
 }
 
-.preview-container {
-  margin: 20px auto;
+.el-menu {
+  border-bottom: none;
+  display: flex;
+  justify-content: center;
 }
 
-.preview-image {
-  max-width: 100%;
-  max-height: 300px;
-  border-radius: 4px;
+.el-menu-item {
+  font-size: 16px;
+  font-weight: bold;
+  height: 60px;
+  line-height: 60px;
+  padding: 0 30px;
+}
+
+.el-main {
+  flex: 1;
+  background-color: #f5f7fa;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .header-content h1 {
+    font-size: 20px;
+    padding: 10px 0;
+  }
+  
+  .el-menu-item {
+    padding: 0 15px;
+    font-size: 14px;
+  }
+  
+  .el-main {
+    padding: 10px;
+  }
 }
 </style>
