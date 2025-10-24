@@ -4,3 +4,7 @@ __pycache__/
 datasets/
 results/
 runs/
+
+*.pt
+
+node_modules/

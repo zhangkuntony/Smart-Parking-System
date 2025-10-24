@@ -9,3 +9,9 @@
 2. **业主车辆判断** - 根据车牌号判断是否为本小区业主车辆
 3. **停车有效期管理** - 判断车辆的停车有效期
 4. **后台管理系统** - 管理小区车辆车牌以及停车有效期
+
+
+## 数据集来源
+https://www.modelscope.cn/datasets/OmniData/CCPD
+https://www.modelscope.cn/datasets/A3315300155/License_plate_10K
+
