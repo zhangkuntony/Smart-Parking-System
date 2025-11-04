@@ -5,9 +5,8 @@ from torch.optim.lr_scheduler import StepLR
 import torch.nn.functional as F
 from tqdm import tqdm
 import matplotlib.pyplot as plt
-import matplotlib
 import csv
-import pandas as pd
+import time
 
 # 设置中文字体支持
 plt.rcParams['font.sans-serif'] = ['SimHei', 'Microsoft YaHei', 'DejaVu Sans']  # 设置字体
@@ -90,6 +89,9 @@ class OCRTrainer:
         correct = 0
         total = 0
         
+        # 记录开始时间
+        start_time = time.time()
+        
         pbar = tqdm(dataloader, desc="训练")
         for batch_idx, (images, labels, original_labels) in enumerate(pbar):
             images = images.to(self.device)
@@ -127,15 +129,44 @@ class OCRTrainer:
             
             total_loss += loss.item()
             
-            # 更新进度条（训练时不计算准确率以提高速度）
+            # 更新进度条（训练时只显示损失，准确率在epoch结束时计算）
             pbar.set_postfix({
                 'loss': f'{loss.item():.4f}'
             })
         
+        # 计算训练时长
+        train_duration = time.time() - start_time
         avg_loss = total_loss / len(dataloader)
-        accuracy = correct / total if total > 0 else 0
         
-        return avg_loss, accuracy
+        # 计算整个epoch的准确率
+        print("计算训练准确率...")
+        accuracy = 0
+        total_samples = 0
+        correct_samples = 0
+        
+        # 使用训练后的模型在整个训练集上计算准确率
+        model.eval()
+        with torch.no_grad():
+            for images, labels, original_labels in dataloader:
+                images = images.to(self.device)
+                
+                # 进行预测
+                predictions = model.predict(images)
+                predicted_texts = recognizer.decode_predictions(predictions)
+                
+                # 统计准确率
+                for pred_text, true_text in zip(predicted_texts, original_labels):
+                    if pred_text == true_text:
+                        correct_samples += 1
+                    total_samples += 1
+        
+        # 恢复训练模式
+        model.train()
+        
+        accuracy = correct_samples / total_samples if total_samples > 0 else 0
+        print(f"训练准确率计算完成: {accuracy:.4f} ({correct_samples}/{total_samples})")
+        
+        return avg_loss, accuracy, train_duration
     
     def validate_epoch(self, model, recognizer, dataloader, criterion):
         """验证一个epoch"""
@@ -143,6 +174,9 @@ class OCRTrainer:
         total_loss = 0
         correct = 0
         total = 0
+        
+        # 记录开始时间
+        start_time = time.time()
         
         with torch.no_grad():
             pbar = tqdm(dataloader, desc="验证")
@@ -200,10 +234,12 @@ class OCRTrainer:
                     'acc': f'{correct/total:.4f}' if total > 0 else '0.0000'
                 })
         
+        # 计算验证时长
+        val_duration = time.time() - start_time
         avg_loss = total_loss / len(dataloader)
         accuracy = correct / total if total > 0 else 0
         
-        return avg_loss, accuracy
+        return avg_loss, accuracy, val_duration
     
     def train(self, epochs=50, batch_size=32, learning_rate=0.001):
         """训练模型"""
@@ -246,7 +282,7 @@ class OCRTrainer:
         # 初始化CSV文件
         with open(csv_file, 'w', newline='', encoding='utf-8') as f:
             writer = csv.writer(f)
-            writer.writerow(['epoch', 'train_loss', 'train_accuracy', 'val_loss', 'val_accuracy', 'learning_rate'])
+            writer.writerow(['epoch', 'train_loss', 'train_accuracy', 'val_loss', 'val_accuracy', 'learning_rate', 'train_duration', 'val_duration'])
         
         print("开始训练...")
         
@@ -254,12 +290,12 @@ class OCRTrainer:
             print(f"\nEpoch {epoch+1}/{epochs}")
             
             # 训练
-            train_loss, train_acc = self.train_epoch(
+            train_loss, train_acc, train_duration = self.train_epoch(
                 recognizer.model, recognizer, train_loader, optimizer, self.ctc_loss
             )
             
             # 验证
-            val_loss, val_acc = self.validate_epoch(
+            val_loss, val_acc, val_duration = self.validate_epoch(
                 recognizer.model, recognizer, val_loader, self.ctc_loss
             )
             
@@ -273,8 +309,8 @@ class OCRTrainer:
             train_accuracies.append(train_acc)
             val_accuracies.append(val_acc)
             
-            print(f"训练损失: {train_loss:.4f}, 训练准确率: {train_acc:.4f}")
-            print(f"验证损失: {val_loss:.4f}, 验证准确率: {val_acc:.4f}")
+            print(f"训练损失: {train_loss:.4f}, 训练准确率: {train_acc:.4f}, 训练时长: {train_duration:.2f}秒")
+            print(f"验证损失: {val_loss:.4f}, 验证准确率: {val_acc:.4f}, 验证时长: {val_duration:.2f}秒")
             
             # 保存指标到CSV文件
             with open(csv_file, 'a', newline='', encoding='utf-8') as f:
@@ -285,7 +321,9 @@ class OCRTrainer:
                     f"{train_acc:.6f}", 
                     f"{val_loss:.6f}", 
                     f"{val_acc:.6f}", 
-                    f"{current_lr:.8f}"
+                    f"{current_lr:.8f}",
+                    f"{train_duration:.2f}",
+                    f"{val_duration:.2f}"
                 ])
             
             # 保存最佳模型
