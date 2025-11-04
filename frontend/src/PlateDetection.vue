@@ -174,7 +174,11 @@ export default {
         }
         
         this.detectionResult = await response.json()
-        this.$message.success('车牌检测成功!')
+        if (this.detectionResult.plate_number == null) {
+          this.$message.warning(this.detectionResult.message)
+        } else {
+          this.$message.success('车牌检测成功!')
+        }
       } catch (error) {
         console.error('Error:', error)
         this.$message.error('车牌检测失败，请重试')
