@@ -6,6 +6,8 @@ import torch.nn.functional as F
 from tqdm import tqdm
 import matplotlib.pyplot as plt
 import matplotlib
+import csv
+import pandas as pd
 
 # 设置中文字体支持
 plt.rcParams['font.sans-serif'] = ['SimHei', 'Microsoft YaHei', 'DejaVu Sans']  # 设置字体
@@ -236,6 +238,16 @@ class OCRTrainer:
         best_val_loss = float('inf')
         best_accuracy = 0
         
+        # 创建结果目录和CSV文件
+        results_dir = "../../runs/ocr/"
+        os.makedirs(results_dir, exist_ok=True)
+        csv_file = os.path.join(results_dir, "result.csv")
+        
+        # 初始化CSV文件
+        with open(csv_file, 'w', newline='', encoding='utf-8') as f:
+            writer = csv.writer(f)
+            writer.writerow(['epoch', 'train_loss', 'train_accuracy', 'val_loss', 'val_accuracy', 'learning_rate'])
+        
         print("开始训练...")
         
         for epoch in range(epochs):
@@ -253,6 +265,7 @@ class OCRTrainer:
             
             # 更新学习率
             scheduler.step()
+            current_lr = scheduler.get_last_lr()[0]
             
             # 记录历史
             train_losses.append(train_loss)
@@ -262,6 +275,18 @@ class OCRTrainer:
             
             print(f"训练损失: {train_loss:.4f}, 训练准确率: {train_acc:.4f}")
             print(f"验证损失: {val_loss:.4f}, 验证准确率: {val_acc:.4f}")
+            
+            # 保存指标到CSV文件
+            with open(csv_file, 'a', newline='', encoding='utf-8') as f:
+                writer = csv.writer(f)
+                writer.writerow([
+                    epoch + 1, 
+                    f"{train_loss:.6f}", 
+                    f"{train_acc:.6f}", 
+                    f"{val_loss:.6f}", 
+                    f"{val_acc:.6f}", 
+                    f"{current_lr:.8f}"
+                ])
             
             # 保存最佳模型
             if val_loss < best_val_loss:
